@@ -1,10 +1,10 @@
 function qsort(arr) {
   if (!arr.length) return [];
-  
+
   var pivot = arr.splice(Math.random() * arr.length | 0, 1)[0];
   var left = arr.filter(function (el) { return el <= pivot; });
   var right = arr.filter(function (el) { return el > pivot; });
-  
+
   return qsort(left).concat(pivot).concat(qsort(right));
 }
 
@@ -22,7 +22,6 @@ process.stdin.on('end', function () {
     .split('\n')
     .slice(0, -1)
     .map(function (el) { return parseInt(el, 10); });
-    
+
   qsort(arr).forEach(function (el) { console.log(el); });
 });
-

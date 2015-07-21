@@ -1,13 +1,8 @@
-qsort :: Ord a => [a] -> [a]
+module Main where
+
+qsort :: [Int] -> [Int]
 qsort [] = []
-qsort (x:xs) = qsort left ++ [x] ++ qsort right
-               where left = [ a | a <- xs, a <= x ]
-                     right = [ a | a <- xs, a > x ]
+qsort (x:xs) = qsort (filter (<=x) xs) ++ [x] ++ qsort (filter (>x) xs)
 
--- input handling
-
-main = do
-  content <- getContents
-  let arr = map read $ lines content :: [Int]
-  mapM_ print $ qsort arr
-
+main :: IO ()
+main = interact (unlines . map show . qsort . map read . lines)

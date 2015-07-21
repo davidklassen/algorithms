@@ -14,4 +14,3 @@
     (cons (string->number line) (arr)))))
 
 (for ([i (qsort (arr))]) (display i) (newline))
-
