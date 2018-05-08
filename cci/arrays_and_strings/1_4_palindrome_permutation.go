@@ -14,7 +14,7 @@ func PalindromePermutation(s string) bool {
 	}
 	odd := 0
 	for _, c := range counts {
-		if c % 2 != 0 {
+		if c%2 != 0 {
 			odd++
 		}
 		if odd > 1 {
