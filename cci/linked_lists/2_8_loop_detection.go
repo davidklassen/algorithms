@@ -20,7 +20,37 @@ func reverse(head *Node) *Node {
 	return r
 }
 
-func LoopDetection(head *Node) *Node {
+func findIntersection(head1, head2 *Node) *Node {
+	// calculate the lengths of both lists
+	len1 := listLen(head1)
+	len2 := listLen(head2)
+	var short, long *Node
+	var shortLen, longLen int
+	if len1 > len2 {
+		short = head2
+		shortLen = len2
+		long = head1
+		longLen = len1
+	} else {
+		short = head1
+		shortLen = len1
+		long = head2
+		longLen = len2
+	}
+	// traverse long list longLen - shortLen times
+	for diff := longLen - shortLen; diff > 0; diff-- {
+		long = long.next
+	}
+	// find intersection
+	for short != long {
+		short = short.next
+		long = long.next
+	}
+	// both short and long point to the intersection
+	return short
+}
+
+func findLoop(head *Node) *Node {
 	// detect a loop and stop on a node in a loop
 	slow, fast := head, head
 	for fast != nil && fast.next != nil {
@@ -30,53 +60,29 @@ func LoopDetection(head *Node) *Node {
 			break
 		}
 	}
+	return fast
+}
 
-	// return nil if no loop detected
-	if fast == nil {
+func LoopDetection(head *Node) *Node {
+	loop := findLoop(head)
+	if loop == nil {
 		return nil
 	}
 
 	// unlink the list after a node in a loop
-	before := fast
-	after := fast.next
+	before := loop
+	after := loop.next
 	before.next = nil
 
-	// reverse the head-before part
+	// reverse the head:before part of the original list
+	// this way we will get 2 lists that start at "before" and "after" refs
+	// the beginning of the loop will be at the intersection node of both lists
 	reverse(head)
+	res := findIntersection(before, after)
 
-	// calculate the lengths of both lists
-	beforeLen := listLen(before)
-	afterLen := listLen(after)
-
-	var short, long *Node
-	var shortLen, longLen int
-	if beforeLen > afterLen {
-		short = after
-		shortLen = afterLen
-		long = before
-		longLen = beforeLen
-	} else {
-		short = before
-		shortLen = beforeLen
-		long = after
-		longLen = afterLen
-	}
-
-	// traverse long list longLen - shortLen times
-	for diff := longLen - shortLen; diff > 0; diff-- {
-		long = long.next
-	}
-
-	// find intersection
-	for short != long {
-		short = short.next
-		long = long.next
-	}
-
-	// reverse and link back
+	// restore the original list
 	reverse(before)
 	before.next = after
 
-	// both short and long point to the loop intersection
-	return short
+	return res
 }
