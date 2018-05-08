@@ -1,20 +1,5 @@
 package linked_lists
 
-func reverse(head *Node) *Node {
-	if head == nil {
-		return nil
-	}
-	cur := head
-	var r *Node = nil
-	for cur != nil {
-		tmp := cur.next
-		cur.next = r
-		r = cur
-		cur = tmp
-	}
-	return r
-}
-
 func SumLists(l1, l2 *Node) *Node {
 	var a, b int
 	pos := 1
