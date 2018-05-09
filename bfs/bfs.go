@@ -1,21 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 )
 
 type Node struct {
 	val      int
 	children []*Node
-}
-
-type Graph struct {
-	nodes []*Node
-}
-
-func (g *Graph) GetRoot() *Node {
-	return g.nodes[0]
 }
 
 type Queue struct {
@@ -42,9 +34,9 @@ func (q *Queue) IsEmpty() bool {
 	return len(q.nodes) == 0
 }
 
-func BFS(g *Graph, visit func(*Node)) {
+func BFS(n *Node, visit func(*Node)) {
 	q := NewQueue()
-	q.Enqueue(g.GetRoot())
+	q.Enqueue(n)
 	visited := make(map[*Node]struct{})
 	for !q.IsEmpty() {
 		cur, _ := q.Dequeue()
@@ -70,8 +62,7 @@ func main() {
 	n1.children = []*Node{n3, n4}
 	n2.children = []*Node{n1}
 	n3.children = []*Node{n2, n4}
-	g := &Graph{nodes: []*Node{n0, n1, n2, n3, n4, n5}}
-	BFS(g, func(n *Node) {
+	BFS(n0, func(n *Node) {
 		fmt.Println("Node", n.val)
 	})
 }
