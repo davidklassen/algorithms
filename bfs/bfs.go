@@ -2,96 +2,76 @@ package main
 
 import (
 	"fmt"
+	"errors"
 )
 
-type node struct {
-	val   int
-	left  *node
-	right *node
+type Node struct {
+	val      int
+	children []*Node
 }
 
-type list struct {
-	val  *node
-	next *list
-	prev *list
+type Graph struct {
+	nodes []*Node
 }
 
-type queue struct {
-	first *list
-	last  *list
+func (g *Graph) GetRoot() *Node {
+	return g.nodes[0]
 }
 
-func (q *queue) enqueue(n *node) {
-	if n == nil {
-		return
+type Queue struct {
+	nodes []*Node
+}
+
+func NewQueue() *Queue {
+	return &Queue{}
+}
+
+func (q *Queue) Enqueue(n *Node) {
+	q.nodes = append(q.nodes, n)
+}
+
+func (q *Queue) Dequeue() (n *Node, err error) {
+	if q.IsEmpty() {
+		return nil, errors.New("queue is empty")
 	}
-	el := &list{
-		val:  n,
-		next: q.first,
-	}
-	if q.last == nil {
-		q.last = el
-	}
-	q.first = el
-	if q.first.next != nil {
-		q.first.next.prev = el
-	}
+	n, q.nodes = q.nodes[0], q.nodes[1:]
+	return n, nil
 }
 
-func (q *queue) dequeue() *node {
-	if q.last == nil {
-		return nil
-	}
-	el := q.last
-	if q.first == q.last {
-		q.first = nil
-		q.last = nil
-	} else {
-		q.last = q.last.prev
-		q.last.next = nil
-	}
-	return el.val
+func (q *Queue) IsEmpty() bool {
+	return len(q.nodes) == 0
 }
 
-func (q *queue) isEmpty() bool {
-	return q.first == nil
-}
-
-func visit(n *node) {
-	fmt.Println(n.val)
-}
-
-func bfs(node *node) {
-	queue := queue{}
-	queue.enqueue(node)
-	for !queue.isEmpty() {
-		current := queue.dequeue()
-		visit(current)
-		queue.enqueue(current.left)
-		queue.enqueue(current.right)
+func BFS(g *Graph, visit func(*Node)) {
+	q := NewQueue()
+	q.Enqueue(g.GetRoot())
+	visited := make(map[*Node]struct{})
+	for !q.IsEmpty() {
+		cur, _ := q.Dequeue()
+		visit(cur)
+		visited[cur] = struct{}{}
+		for _, n := range cur.children {
+			if _, ok := visited[n]; !ok {
+				q.Enqueue(n)
+			}
+		}
 	}
 }
 
 func main() {
-	bfs(&node{
-		val: 1,
-		left: &node{
-			val: 2,
-			left: &node{
-				val: 3,
-				left: &node{
-					val: 4,
-				},
-			},
-			right: &node{
-				val: 5,
-			},
-		},
-		right: &node{
-			val: 6,
-			left: &node{
-				val: 7,
-			},
-		},
+	fmt.Println("Hello, BFS!")
+	n0 := &Node{val: 0}
+	n1 := &Node{val: 1}
+	n2 := &Node{val: 2}
+	n3 := &Node{val: 3}
+	n4 := &Node{val: 4}
+	n5 := &Node{val: 5}
+	n0.children = []*Node{n1, n4, n5}
+	n1.children = []*Node{n3, n4}
+	n2.children = []*Node{n1}
+	n3.children = []*Node{n2, n4}
+	g := &Graph{nodes: []*Node{n0, n1, n2, n3, n4, n5}}
+	BFS(g, func(n *Node) {
+		fmt.Println("Node", n.val)
 	})
 }
