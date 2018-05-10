@@ -1,41 +1,33 @@
 package linked_lists
 
-func listLen(head *Node) int {
-	l := 0
-	for head != nil {
-		l++
+func listLen(head *Node) (l int) {
+	for l = 0; head != nil; l++ {
 		head = head.next
 	}
-	return l
+	return
 }
 
-func reverse(head *Node) *Node {
-	var r *Node = nil
+func reverse(head *Node) (r *Node) {
 	for head != nil {
 		next := head.next
 		head.next = r
 		r = head
 		head = next
 	}
-	return r
+	return
 }
 
 func findIntersection(head1, head2 *Node) *Node {
 	// calculate the lengths of both lists
-	len1 := listLen(head1)
-	len2 := listLen(head2)
+	len1, len2 := listLen(head1), listLen(head2)
 	var short, long *Node
 	var shortLen, longLen int
 	if len1 > len2 {
-		short = head2
-		shortLen = len2
-		long = head1
-		longLen = len1
+		short, shortLen = head2, len2
+		long, longLen = head1, len1
 	} else {
-		short = head1
-		shortLen = len1
-		long = head2
-		longLen = len2
+		short, shortLen = head1, len1
+		long, longLen = head2, len2
 	}
 	// traverse long list longLen - shortLen times
 	for diff := longLen - shortLen; diff > 0; diff-- {
@@ -68,21 +60,17 @@ func LoopDetection(head *Node) *Node {
 	if loop == nil {
 		return nil
 	}
-
 	// unlink the list after a node in a loop
 	before := loop
 	after := loop.next
 	before.next = nil
-
 	// reverse the head:before part of the original list
 	// this way we will get 2 lists that start at "before" and "after" refs
 	// the beginning of the loop will be at the intersection node of both lists
 	reverse(head)
 	res := findIntersection(before, after)
-
 	// restore the original list
 	reverse(before)
 	before.next = after
-
 	return res
 }
