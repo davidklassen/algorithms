@@ -1,26 +1,26 @@
-package trees_and_graphs
+package bin_tree
 
 import (
 	"testing"
 )
 
-var tree = &BinaryTreeNode{
+var tree = &Node{
 	val: 1,
-	left: &BinaryTreeNode{
+	left: &Node{
 		val: 2,
-		left: &BinaryTreeNode{
+		left: &Node{
 			val: 3,
 		},
-		right: &BinaryTreeNode{
+		right: &Node{
 			val: 4,
 		},
 	},
-	right: &BinaryTreeNode{
+	right: &Node{
 		val: 5,
-		left: &BinaryTreeNode{
+		left: &Node{
 			val: 6,
 		},
-		right: &BinaryTreeNode{
+		right: &Node{
 			val: 7,
 		},
 	},
@@ -38,9 +38,9 @@ func CompareSlices(s1, s2 []int) bool {
 	return true
 }
 
-func Traversal(t *testing.T, tree *BinaryTreeNode, traversal func(*BinaryTreeNode, func(*BinaryTreeNode)), expect []int) {
+func Traversal(t *testing.T, tree *Node, traversal func(*Node, func(*Node)), expect []int) {
 	var got []int
-	traversal(tree, func(node *BinaryTreeNode) {
+	traversal(tree, func(node *Node) {
 		got = append(got, node.val)
 	})
 	if !CompareSlices(got, expect) {

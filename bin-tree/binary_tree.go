@@ -1,11 +1,7 @@
-package trees_and_graphs
+package bin_tree
 
-type BinaryTreeNode struct {
+type Node struct {
 	val   int
-	left  *BinaryTreeNode
-	right *BinaryTreeNode
-}
-
-func (bt *BinaryTreeNode) IsLeaf() bool {
-	return bt.left == nil && bt.right == nil
+	left  *Node
+	right *Node
 }
