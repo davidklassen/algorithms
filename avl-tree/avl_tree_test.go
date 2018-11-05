@@ -5,6 +5,14 @@ import (
 	"testing"
 )
 
+func PreOrderTraversal(node *Node, visit func(*Node)) {
+	if node != nil {
+		visit(node)
+		PreOrderTraversal(node.left, visit)
+		PreOrderTraversal(node.right, visit)
+	}
+}
+
 func TestAVLTree(t *testing.T) {
 	tree := &Node{val: 1}
 	PreOrderTraversal(tree, func(n *Node) {
